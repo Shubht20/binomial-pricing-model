@@ -152,7 +152,7 @@ def option_price_heatmap(K, T, r, N, option_type, style,
                          spot_min, spot_max, spot_steps,
                          vol_min, vol_max, vol_steps):
     spot_range = np.linspace(spot_min, spot_max, spot_steps)
-    vol_range = np.linspace(vol_min, vol_max, vol_steps)
+    vol_range = np.linspace(vol_max, vol_min, vol_steps)
 
     heatmap_data = np.zeros((len(vol_range), len(spot_range)))
 
