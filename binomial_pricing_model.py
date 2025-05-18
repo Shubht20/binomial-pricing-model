@@ -167,12 +167,15 @@ def option_price_heatmap(K, T, r, N, option_type, style,
     fig, ax = plt.subplots(figsize=(12, 6))
     sns.heatmap(
         heatmap_data,
-        xticklabels=np.round(spot_range, 2),
+        xticklabels=np.round(spot_range, 0),
         yticklabels=np.round(vol_range, 2),
         cmap='RdYlGn',
          annot=True,                  # <--- annotate each cell
         fmt=".1f",
-        cbar_kws={'label': 'Option Price'}
+        annot_kws ={"size": 7},
+        cbar=True,
+        linewidths=0.5,
+        ax=ax
     )
     #plt.xlabel('Spot Price (S)')
     #plt.ylabel('Volatility (σ)')
@@ -182,6 +185,7 @@ def option_price_heatmap(K, T, r, N, option_type, style,
     ax.set_xlabel('Spot Price (S)')
     ax.set_ylabel('Volatility (σ)')
     ax.set_title(f'{style.title()} {option_type.title()} Option Price Heatmap')
+    plt.xticks(rotation=45)
     st.pyplot(fig)
 
 # 3. Controller function to choose mode
@@ -231,9 +235,8 @@ option_type = st.sidebar.selectbox("Option Type", ['call', 'put'])
 style = st.sidebar.selectbox("Option Style", ['european', 'american'])
 K = st.sidebar.number_input("Strike Price (K)", value=100.0)
 T = st.sidebar.number_input("Time to Maturity (T in years)", value=1.0, step=0.1)
-r = st.sidebar.number_input("Risk-Free Rate (r)", value=0.05, step=0.01)
-N = st.sidebar.slider("Steps (N)", min_value=5, max_value=100, value=20, step=5)
-
+r = st.sidebar.number_input("Risk-Free Rate (r)", value=0.05, step=0.005)
+N = st.slider("Number of Steps", min_value=1, max_value=100, value=50, step=1)
 if mode == 'Option Pricing':
     st.subheader("🔹 Binomial Option Pricing")
 
@@ -265,7 +268,7 @@ elif mode == 'Heatmap':
         vol_max = st.number_input("Max Volatility", value=0.5, step=0.01)
         vol_steps = st.slider("Volatility Steps", 5, 50, 20)
 
-    if st.button("Generate Heatmap"):
-        option_price_heatmap(K, T, r, N, option_type, style,
+    #if st.button("Generate Heatmap"):
+    option_price_heatmap(K, T, r, N, option_type, style,
                              spot_min, spot_max, spot_steps,
                              vol_min, vol_max, vol_steps)
